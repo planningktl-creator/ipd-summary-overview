@@ -27,6 +27,8 @@ npm run dev
 
 เปิด `http://localhost:5173` สำหรับ Vite dev server หรือใช้ production container ตาม deployment runbook
 
+`npm run build:web` จะเก็บ artifact สำหรับ Docker ไว้ที่ `dist/web/` และ mirror static SPA ไปที่ `dist/index.html` พร้อม `dist/assets/` เพื่อให้ BMS Marketplace ที่ตรวจหา output ใน root `dist/` พบ entrypoint ได้
+
 ## Local Docker
 
 คัดลอก `.env.example` เป็น `.env` แล้วเปลี่ยนค่าความลับทุกตัวก่อนใช้งาน:

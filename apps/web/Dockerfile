@@ -7,6 +7,7 @@ COPY packages/contracts/package.json packages/contracts/package.json
 RUN npm ci
 COPY tsconfig.base.json ./
 COPY apps/web/vite.config.ts apps/web/vite.config.ts
+COPY scripts/prepare-spa-dist.mjs scripts/prepare-spa-dist.mjs
 COPY apps/web apps/web
 COPY packages/contracts packages/contracts
 RUN npm run build:web
