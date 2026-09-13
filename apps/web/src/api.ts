@@ -1,5 +1,7 @@
 import type { AttachmentMeta, CaseDetail, CaseListParams, CasePage, SessionStatus } from "@ipd-summary/contracts";
 
+let sessionBootstrap: Promise<void> | null = null;
+
 async function request<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
   const response = await fetch(input, { ...init, credentials: "include", headers: { accept: "application/json", ...(init?.headers ?? {}) } });
   const body = await response.json().catch(() => null) as T & { error?: string; code?: string } | null;
@@ -7,7 +9,30 @@ async function request<T>(input: RequestInfo | URL, init?: RequestInit): Promise
   return body as T;
 }
 
+function clearBmsSessionQuery(): string | null {
+  if (typeof window === "undefined") return null;
+  const url = new URL(window.location.href);
+  const sessionId = url.searchParams.get("bms-session-id");
+  if (sessionId === null) return null;
+  url.searchParams.delete("bms-session-id");
+  window.history.replaceState(window.history.state, document.title, `${url.pathname}${url.search}${url.hash}`);
+  return sessionId;
+}
+
+async function bootstrapBmsSession(): Promise<void> {
+  if (sessionBootstrap) return sessionBootstrap;
+  const sessionId = clearBmsSessionQuery();
+  if (sessionId === null) return;
+  sessionBootstrap = request<{ status: SessionStatus }>("/api/session/handshake", {
+    method: "POST",
+    body: JSON.stringify({ sessionId }),
+    headers: { "content-type": "application/json" },
+  }).then(() => undefined);
+  return sessionBootstrap;
+}
+
 export async function getSession(): Promise<SessionStatus> {
+  await bootstrapBmsSession();
   const result = await request<{ status: SessionStatus }>("/api/session");
   return result.status;
 }

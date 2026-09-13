@@ -1,6 +1,7 @@
 import os
 import re
 from pathlib import Path
+from urllib.parse import quote
 
 from playwright.sync_api import sync_playwright
 
@@ -13,19 +14,24 @@ def main() -> None:
     Path("test-results").mkdir(exist_ok=True)
     console_messages: list[str] = []
     network_secrets: list[str] = []
+    handshake_seen = False
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
         page = browser.new_page()
         page.on("console", lambda message: console_messages.append(message.text))
 
         def inspect_request(request) -> None:
+            nonlocal handshake_seen
             payload = request.post_data or ""
             value = f"{request.url} {payload}"
+            if request.url.endswith("/api/session/handshake"):
+                handshake_seen = True
             if FORBIDDEN.search(value):
                 network_secrets.append(value)
 
         page.on("request", inspect_request)
-        page.goto(BASE_URL, wait_until="networkidle")
+        session_id = os.environ.get("IPD_SMOKE_SESSION_ID", "demo")
+        page.goto(f"{BASE_URL}?bms-session-id={quote(session_id)}", wait_until="networkidle")
         page.get_by_role("button", name=re.compile("AN-DEMO-001")).wait_for()
         page.get_by_text("เตียง / ห้อง").first.wait_for()
         page.get_by_text("สิทธิ์ตัวอย่าง").first.wait_for()
@@ -34,6 +40,8 @@ def main() -> None:
 
         storage = page.evaluate("""() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) })""")
         assert storage == {"local": [], "session": []}, storage
+        assert handshake_seen
+        assert "bms-session-id" not in page.url
         assert "AN-DEMO-001" not in page.url
         assert not any(FORBIDDEN.search(message) for message in console_messages), console_messages
         assert not network_secrets, network_secrets

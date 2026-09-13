@@ -45,7 +45,7 @@ docker compose run --rm api node scripts/migrate.mjs
 
 ## BMS Marketplace handshake
 
-ตั้ง `APP_MODE=bms`, BMS marketplace token และ secret ผ่าน environment/secret store เท่านั้น จากนั้น client ส่ง `POST /api/session/handshake` ด้วย session code ที่ได้รับจาก BMS URL ครั้งแรก BFF จะแลก session กับ PasteJSON endpoint, ตรวจ host/protocol/database type และเก็บข้อมูลไว้ใน encrypted HttpOnly cookie เท่านั้น
+ตั้ง `APP_MODE=bms`, BMS marketplace token และ secret ผ่าน environment/secret store เท่านั้น เมื่อเปิดแอปด้วย BMS URL ที่มี `bms-session-id` client จะส่ง `POST /api/session/handshake` ให้ BFF อัตโนมัติ แล้วลบ session ออกจาก address bar/history ทันที BFF จะแลก session กับ PasteJSON endpoint, ตรวจ host/protocol/database type และเก็บข้อมูลไว้ใน encrypted HttpOnly cookie เท่านั้น
 
 ห้ามส่ง session code ผ่าน query ต่อหลัง handshake, ห้ามใช้ localStorage/sessionStorage และห้ามเปิด public CORS proxy ไปยัง HOSxP รายละเอียดอยู่ที่ [docs/deployment.md](docs/deployment.md) และ [docs/architecture.md](docs/architecture.md)
 

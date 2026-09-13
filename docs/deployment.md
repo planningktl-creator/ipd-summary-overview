@@ -25,7 +25,7 @@ The root `Dockerfile` is the Marketplace-compatible SPA entrypoint and exposes c
 1. Register the app in the BMS Marketplace and obtain a staging session flow. Do not place the session code or marketplace token in source, URL bookmarks, screenshots or issues.
 2. Set `APP_MODE=bms`, `BMS_MARKETPLACE_TOKEN`, BMS allow-list and production secrets in the platform secret store. Use HTTPS at the edge so the cookie remains `Secure`.
 3. Run migrations against the app-owned PostgreSQL database from a controlled release job.
-4. Send a fresh session code to `POST /api/session/handshake`; verify `/api/session` returns only status/actor metadata and never token material.
+4. Open the Marketplace URL with a fresh `bms-session-id`; the SPA posts it once to `/api/session/handshake`, removes it from the address bar/history, and then calls `/api/session`. Verify the response returns only status/actor metadata and never token material.
 5. Verify `/api/cases` with a staging account and review query latency/cardinality. Confirm HOSxP remains read-only and no write query is enabled.
 6. Run browser smoke: no PHI/token in browser storage, URL, console or request log; verify image endpoint authorization and Markdown sanitizer.
 7. Run DRG evidence gates with a synthetic/anonymized case before opening the environment to auditors.
