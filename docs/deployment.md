@@ -18,6 +18,8 @@ docker compose run --rm api node scripts/migrate.mjs
 
 The web service exposes `3082:8080`; API `8788` is internal to Compose. Containers are non-root, read-only, capability-dropped and have no-new-privileges enabled.
 
+The root `Dockerfile` is the Marketplace-compatible SPA entrypoint and exposes container port `8080`. Use `docker-compose.yaml` for the complete local topology; it builds the dedicated `apps/web/Dockerfile` and `apps/api/Dockerfile` services separately.
+
 ## BMS Marketplace
 
 1. Register the app in the BMS Marketplace and obtain a staging session flow. Do not place the session code or marketplace token in source, URL bookmarks, screenshots or issues.

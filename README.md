@@ -13,6 +13,7 @@
 - Query registry แบบ allow-list, read-only, typed parameters, explicit columns และ bounded pagination
 - DRG audit ledger ที่แยก raw/normalized input, evidence, candidate, validation, grouping trace และ discrepancy
 - Local Docker topology: `web` → `api` → `postgres`; web เปิดที่ `http://localhost:3082`
+- Marketplace-compatible root `Dockerfile` exposes the public Nginx port `8080`; local Compose maps it to host port `3082`
 
 ## Quick start: synthetic demo
 
