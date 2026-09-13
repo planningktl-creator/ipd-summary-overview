@@ -24,8 +24,8 @@ describe("IPD summary dashboard", () => {
   it("renders the admission board and evidence rail from an API fixture", async () => {
     render(<App />);
     expect(await screen.findByText("AN-DEMO-001")).toBeInTheDocument();
-    expect(screen.getByText("DRG audit")).toBeInTheDocument();
-    expect(screen.getByText("Version fence")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "DRG audit" })).toBeInTheDocument();
+    expect(await screen.findByText("Version fence")).toBeInTheDocument();
     expect(screen.queryByText(/bearerToken/i)).not.toBeInTheDocument();
   });
 });
