@@ -27,6 +27,8 @@ def main() -> None:
         page.on("request", inspect_request)
         page.goto(BASE_URL, wait_until="networkidle")
         page.get_by_role("button", name=re.compile("AN-DEMO-001")).wait_for()
+        page.get_by_text("เตียง / ห้อง").first.wait_for()
+        page.get_by_text("สิทธิ์ตัวอย่าง").first.wait_for()
         page.get_by_role("heading", name="DRG audit").wait_for()
         page.get_by_text("Version fence").wait_for()
 

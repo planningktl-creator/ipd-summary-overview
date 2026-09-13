@@ -46,6 +46,13 @@ export function buildSyntheticCase(caseRef: string, variant: "ready" | "attentio
     admitAt: isAttention ? "2026-09-11T05:20:00+07:00" : "2026-09-10T09:10:00+07:00",
     dischargeAt: isAttention ? null : "2026-09-13T07:30:00+07:00",
     status: isAttention ? "admitted" : "discharged",
+    admissionSnapshot: {
+      bedNo: isAttention ? "B-12" : "B-06", bedType: "สามัญ", roomNo: isAttention ? "R-12" : "R-06", roomName: isAttention ? "ห้องอายุรกรรมหญิง" : "ห้องอายุรกรรมชาย", bedOrder: isAttention ? 2 : 1,
+      pdxName: isAttention ? null : "Pneumonia, unspecified organism", diagnosisCount: isAttention ? 0 : 2, ageYears: isAttention ? 68 : 54, ageMonths: null, ageDays: null,
+      admitDoctorName: "แพทย์รับไว้ตัวอย่าง", inchargeDoctorName: "แพทย์เจ้าของไข้ตัวอย่าง", ownerDoctorName: "แพทย์เจ้าของไข้ตัวอย่าง", dischargeDoctorName: isAttention ? null : "แพทย์จำหน่ายตัวอย่าง", currentDepartmentName: "อายุรกรรม",
+      admitTypeName: "รับไว้รักษาแบบปกติ", rightCode: "UC-DEMO", rightName: "สิทธิ์ตัวอย่าง", financeStatus: "open", financeStatusName: isAttention ? "รอตรวจสอบ" : "พร้อมตรวจสอบ", debtMoney: isAttention ? 18250 : 3780, waitingPaidMoney: isAttention ? 18250 : 3780, waitingDebtMoney: 0,
+      dischargeOrderStatus: isAttention ? "ยังไม่สั่งจำหน่าย" : "สั่งจำหน่ายแล้ว", dischargeTypeName: isAttention ? null : "กลับบ้าน", dischargeStatusName: isAttention ? "กำลังรักษา" : "จำหน่ายแล้ว", finalSummaryStatus: isAttention ? "ยังไม่ยืนยัน" : "ยืนยันแล้ว", auditSummaryStatus: isAttention ? "ยังไม่ยืนยัน" : "ยืนยันแล้ว", summaryStatusName: isAttention ? "รอสรุป" : "สรุปแล้ว", summaryAckStatus: isAttention ? "รอรับทราบ" : "รับทราบแล้ว", summaryMedicationStatus: isAttention ? "รอทบทวนยา" : "ทบทวนแล้ว", operationStatusName: "ไม่มีรายการผ่าตัด", infectionFlag: "ไม่พบสัญญาณ", physicStatusId: null, collectionStatusName: "ครบถ้วน", drgDescription: currentGrouper.drg ? "Synthetic DRG description" : null, lastSyncAt: asOf,
+    },
     pdx: isAttention ? null : "J189",
     drg: currentGrouper.drg,
     rw: currentGrouper.rw,

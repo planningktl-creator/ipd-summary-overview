@@ -50,6 +50,46 @@ export interface FinanceSummary {
   status: DataAvailability;
 }
 
+export interface AdmissionListSnapshot {
+  bedNo: string | null;
+  bedType: string | null;
+  roomNo: string | null;
+  roomName: string | null;
+  bedOrder: number | null;
+  pdxName: string | null;
+  diagnosisCount: number | null;
+  ageYears: number | null;
+  ageMonths: number | null;
+  ageDays: number | null;
+  admitDoctorName: string | null;
+  inchargeDoctorName: string | null;
+  ownerDoctorName: string | null;
+  dischargeDoctorName: string | null;
+  currentDepartmentName: string | null;
+  admitTypeName: string | null;
+  rightCode: string | null;
+  rightName: string | null;
+  financeStatus: string | null;
+  financeStatusName: string | null;
+  debtMoney: number | null;
+  waitingPaidMoney: number | null;
+  waitingDebtMoney: number | null;
+  dischargeOrderStatus: string | null;
+  dischargeTypeName: string | null;
+  dischargeStatusName: string | null;
+  finalSummaryStatus: string | null;
+  auditSummaryStatus: string | null;
+  summaryStatusName: string | null;
+  summaryAckStatus: string | null;
+  summaryMedicationStatus: string | null;
+  operationStatusName: string | null;
+  infectionFlag: string | null;
+  physicStatusId: number | null;
+  collectionStatusName: string | null;
+  drgDescription: string | null;
+  lastSyncAt: string | null;
+}
+
 export interface GrouperResult {
   engine: "TGrp" | "TDS" | "CMI_API" | "none";
   executableVersion: string | null;
@@ -77,6 +117,7 @@ export interface CaseListItem {
   admitAt: string | null;
   dischargeAt: string | null;
   status: CaseStatus;
+  admissionSnapshot: AdmissionListSnapshot;
   pdx: string | null;
   drg: string | null;
   rw: number | null;

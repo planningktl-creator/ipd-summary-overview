@@ -32,7 +32,7 @@ Memory storage is available for demo/test. With `DATABASE_URL`, `PostgresAuditRe
 1. BMS session code is accepted once at `/api/session/handshake`.
 2. BFF validates the pasted session payload, HTTPS/host allow-list and PostgreSQL database type.
 3. Session secrets are sealed into an HttpOnly cookie with expiry.
-4. A list query runs through the registry with bounded limit and typed parameters.
+4. A list query runs through the registry with bounded limit, typed parameters and an `admissionSnapshot` containing the pre-detail admission/discharge, bed, care-team, coverage, finance, summary-workflow and DRG fields needed for triage.
 5. The BFF creates an opaque `caseRef`; detail queries resolve it internally and fetch only the selected case.
 6. Audit ledger is initialized with raw/normalized input, validation and rule path. Human events and AI artifacts are appended separately.
 

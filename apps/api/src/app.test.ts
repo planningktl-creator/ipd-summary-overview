@@ -26,6 +26,11 @@ describe("IPD Summary API contract", () => {
     const page = await app.inject({ method: "GET", url: "/api/cases?limit=10", headers: { cookie: cookie! } });
     expect(page.statusCode).toBe(200);
     expect(page.json().rows).toHaveLength(2);
+    expect(page.json().rows[0].admissionSnapshot).toMatchObject({ bedNo: "B-06", rightName: "สิทธิ์ตัวอย่าง", summaryStatusName: "สรุปแล้ว" });
+    const admitted = await app.inject({ method: "GET", url: "/api/cases?status=admitted", headers: { cookie: cookie! } });
+    expect(admitted.json().rows).toHaveLength(1);
+    const discharged = await app.inject({ method: "GET", url: "/api/cases?status=discharged", headers: { cookie: cookie! } });
+    expect(discharged.json().rows).toHaveLength(1);
     const caseRef = page.json().rows[0].caseRef as string;
     expect(caseRef).not.toContain("AN-DEMO-001");
     const detail = await app.inject({ method: "GET", url: `/api/cases/${encodeURIComponent(caseRef)}`, headers: { cookie: cookie! } });
