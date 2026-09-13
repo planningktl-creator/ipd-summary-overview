@@ -1,0 +1,82 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ipd_summary}
+      POSTGRES_USER: ${POSTGRES_USER:-ipd_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - ipd-summary-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # PostgreSQL needs a writable data directory and init-time ownership changes.
+    # The application containers remain read-only; this stateful service is limited to its named volume.
+    tmpfs:
+      - /tmp
+      - /run/postgresql
+    cap_drop: ["NET_RAW"]
+    security_opt:
+      - no-new-privileges:true
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      NODE_ENV: production
+      APP_MODE: ${APP_MODE:-demo}
+      PORT: 8788
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ipd_app}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ipd_summary}
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env}
+      CASE_REF_SECRET: ${CASE_REF_SECRET:?Set CASE_REF_SECRET in .env}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY:?Set DATA_ENCRYPTION_KEY in .env}
+      BMS_MARKETPLACE_TOKEN: ${BMS_MARKETPLACE_TOKEN:-}
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-clinical-assistant}
+      CORS_ORIGINS: http://localhost:3082,http://127.0.0.1:3082
+      COOKIE_SECURE: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8788"
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: ["ALL"]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8788/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3082:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:uid=101,gid=101,mode=755
+      - /var/run:uid=101,gid=101,mode=755
+    cap_drop: ["ALL"]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8080/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ipd-summary-pg:

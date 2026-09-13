@@ -1,0 +1,12 @@
+{
+  "name": "@ipd-summary/web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@fontsource/noto-sans-thai": "^5.1.1",
+    "@fontsource/prompt": "^5.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

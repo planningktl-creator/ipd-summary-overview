@@ -1,0 +1,21 @@
+{
+  "fixtureVersion": "2026-09-13",
+  "cases": [
+    {
+      "caseRef": "fixture-ref-ready",
+      "status": "discharged",
+      "ward": "synthetic-medical-1",
+      "pdx": "synthetic-code-j189",
+      "grouperResponseStatus": "valid",
+      "note": "Illustrative only; no patient identifier or real clinical result."
+    },
+    {
+      "caseRef": "fixture-ref-attention",
+      "status": "admitted",
+      "ward": "synthetic-medical-2",
+      "pdx": null,
+      "grouperResponseStatus": "empty",
+      "note": "Empty is an explicit QA state, not a success result."
+    }
+  ]
+}
